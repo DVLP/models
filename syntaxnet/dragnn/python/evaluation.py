@@ -14,7 +14,7 @@
 # ==============================================================================
 """Parser evaluation utils."""
 
-from __future__ import division
+
 
 import tensorflow as tf
 
@@ -36,7 +36,7 @@ def calculate_parse_metrics(gold_corpus, annotated_corpus):
     annotated.ParseFromString(annotated_str)
     check.Eq(gold.text, annotated.text, 'Text is not aligned')
     check.Eq(len(gold.token), len(annotated.token), 'Tokens are not aligned')
-    tokens = zip(gold.token, annotated.token)
+    tokens = list(zip(gold.token, annotated.token))
     num_tokens += len(tokens)
     num_correct_pos += sum(1 for x, y in tokens if x.tag == y.tag)
     num_correct_uas += sum(1 for x, y in tokens if x.head == y.head)

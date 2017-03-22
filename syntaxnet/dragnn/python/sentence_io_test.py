@@ -42,7 +42,7 @@ class ConllSentenceReaderTest(test_util.TensorFlowTestCase):
     pb.ParseFromString(sentences[0])
     self.assertFalse(last)
     self.assertEqual(
-        u'I knew I could do it properly if given the right kind of support .',
+        'I knew I could do it properly if given the right kind of support .',
         pb.text)
 
   def testReadFromTextFile(self):

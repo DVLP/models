@@ -83,7 +83,7 @@ def Eval(sess):
                                   arg_prefix=FLAGS.arg_prefix))
 
   t = time.time()
-  hidden_layer_sizes = map(int, FLAGS.hidden_layer_sizes.split(','))
+  hidden_layer_sizes = list(map(int, FLAGS.hidden_layer_sizes.split(',')))
   logging.info('Building training network with parameters: feature_sizes: %s '
                'domain_sizes: %s', feature_sizes, domain_sizes)
   if FLAGS.graph_builder == 'greedy':
@@ -111,7 +111,7 @@ def Eval(sess):
                        evaluation_max_steps=FLAGS.max_steps)
 
   parser.AddSaver(FLAGS.slim_model)
-  sess.run(parser.inits.values())
+  sess.run(list(parser.inits.values()))
   parser.saver.restore(sess, FLAGS.model_path)
 
   sink_documents = tf.placeholder(tf.string)

@@ -134,8 +134,8 @@ class TextFormatsTest(test_util.TensorFlowTestCase):
         task_context=self.context_file, batch_size=1)
 
     # Expected texts, words, and start/end offsets.
-    expected_text = u'We\'ve moved on.'
-    expected_words = [u'We', u'\'ve', u'moved', u'on', u'.']
+    expected_text = 'We\'ve moved on.'
+    expected_words = ['We', '\'ve', 'moved', 'on', '.']
     expected_starts = [0, 2, 6, 12, 14]
     expected_ends = [1, 4, 10, 13, 14]
     with self.test_session() as sess:
@@ -179,8 +179,8 @@ token {
         task_context=self.context_file, batch_size=1)
 
     # Expected texts, words, and start/end offsets.
-    expected_text = u'fair enough; you people have eaten me.'
-    expected_words = [u'fair', u'enough']
+    expected_text = 'fair enough; you people have eaten me.'
+    expected_words = ['fair', 'enough']
     expected_starts = [0, 5]
     expected_ends = [3, 10]
     with self.test_session() as sess:

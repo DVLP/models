@@ -13,7 +13,7 @@ from syntaxnet.util import check
 
 try:
   tf.NotDifferentiable('ExtractFixedFeatures')
-except KeyError, e:
+except KeyError as e:
   logging.info(str(e))
 
 
@@ -219,7 +219,7 @@ class MasterBuilder(object):
     Returns:
       A dictionary of both input and output nodes.
     """
-    with tf.control_dependencies(outputs.values()):
+    with tf.control_dependencies(list(outputs.values())):
       with tf.name_scope('ComputeSession'):
         release_op = dragnn_ops.release_session(handle)
       run_op = tf.group(release_op, name='run')

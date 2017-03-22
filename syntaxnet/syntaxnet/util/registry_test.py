@@ -40,47 +40,47 @@ class RegistryTest(googletest.TestCase):
 
   def testCannotCreateNonSubclass(self):
     """Tests that Create fails if the class is not a subclass of Base."""
-    with self.assertRaisesRegexp(ValueError, 'Failed to create'):
+    with self.assertRaisesRegex(ValueError, 'Failed to create'):
       registry_test_base.Base.Create(PATH + 'registry_test_impl.NonSubclass',
                                      'hello world')
 
   def testCannotCreateNonClass(self):
     """Tests that Create fails if the name does not identify a class."""
-    with self.assertRaisesRegexp(ValueError, 'Failed to create'):
+    with self.assertRaisesRegex(ValueError, 'Failed to create'):
       registry_test_base.Base.Create(PATH + 'registry_test_impl.variable',
                                      'hello world')
-    with self.assertRaisesRegexp(ValueError, 'Failed to create'):
+    with self.assertRaisesRegex(ValueError, 'Failed to create'):
       registry_test_base.Base.Create(PATH + 'registry_test_impl.Function',
                                      'hello world')
 
   def testCannotCreateMissingClass(self):
     """Tests that Create fails if the class does not exist in the module."""
-    with self.assertRaisesRegexp(ValueError, 'Failed to create'):
+    with self.assertRaisesRegex(ValueError, 'Failed to create'):
       registry_test_base.Base.Create(PATH + 'registry_test_impl.MissingClass',
                                      'hello world')
 
   def testCannotCreateMissingModule(self):
     """Tests that Create fails if the module does not exist."""
-    with self.assertRaisesRegexp(ValueError, 'Failed to create'):
+    with self.assertRaisesRegex(ValueError, 'Failed to create'):
       registry_test_base.Base.Create(PATH + 'missing.SomeClass', 'hello world')
 
   def testCannotCreateMissingPackage(self):
     """Tests that Create fails if the package does not exist."""
-    with self.assertRaisesRegexp(ValueError, 'Failed to create'):
+    with self.assertRaisesRegex(ValueError, 'Failed to create'):
       registry_test_base.Base.Create('missing.package.path.module.SomeClass',
                                      'hello world')
 
   def testCannotCreateMalformedType(self):
     """Tests that Create fails on malformed type names."""
-    with self.assertRaisesRegexp(ValueError, 'Failed to create'):
+    with self.assertRaisesRegex(ValueError, 'Failed to create'):
       registry_test_base.Base.Create('oneword', 'hello world')
-    with self.assertRaisesRegexp(ValueError, 'Failed to create'):
+    with self.assertRaisesRegex(ValueError, 'Failed to create'):
       registry_test_base.Base.Create('hyphen-ated', 'hello world')
-    with self.assertRaisesRegexp(ValueError, 'Failed to create'):
+    with self.assertRaisesRegex(ValueError, 'Failed to create'):
       registry_test_base.Base.Create('has space', 'hello world')
-    with self.assertRaisesRegexp(ValueError, 'Failed to create'):
+    with self.assertRaisesRegex(ValueError, 'Failed to create'):
       registry_test_base.Base.Create(' ', 'hello world')
-    with self.assertRaisesRegexp(ValueError, 'Failed to create'):
+    with self.assertRaisesRegex(ValueError, 'Failed to create'):
       registry_test_base.Base.Create('', 'hello world')
 
   def testCanCreateWithRelativePath(self):
@@ -108,7 +108,7 @@ class RegistryTest(googletest.TestCase):
         'saft.bad.registry_test_impl.Impl', 'missing.registry_test_impl.Impl',
         'registry_test_impl.Bad', 'Impl'
     ]:
-      with self.assertRaisesRegexp(ValueError, 'Failed to create'):
+      with self.assertRaisesRegex(ValueError, 'Failed to create'):
         registry_test_base.Base.Create(name, 'hello world')
 
 

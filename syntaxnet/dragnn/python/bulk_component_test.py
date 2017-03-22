@@ -167,14 +167,14 @@ class BulkComponentTest(test_util.TensorFlowTestCase):
       comp = bulk_component.BulkFeatureExtractorComponentBuilder(
           self.master, component_spec)
 
-      with self.assertRaisesRegexp(ValueError,
+      with self.assertRaisesRegex(ValueError,
                                    'Constant embeddings must be pretrained'):
         comp.build_greedy_training(self.master_state, self.network_states)
-      with self.assertRaisesRegexp(ValueError,
+      with self.assertRaisesRegex(ValueError,
                                    'Constant embeddings must be pretrained'):
         comp.build_greedy_inference(
             self.master_state, self.network_states, during_training=True)
-      with self.assertRaisesRegexp(ValueError,
+      with self.assertRaisesRegex(ValueError,
                                    'Constant embeddings must be pretrained'):
         comp.build_greedy_inference(
             self.master_state, self.network_states, during_training=False)

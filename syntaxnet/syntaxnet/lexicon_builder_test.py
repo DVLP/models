@@ -33,7 +33,7 @@ from syntaxnet.ops import gen_parser_ops
 
 FLAGS = tf.app.flags.FLAGS
 
-CONLL_DOC1 = u'''1 बात _ n NN _ _ _ _ _
+CONLL_DOC1 = '''1 बात _ n NN _ _ _ _ _
 2 गलत _ adj JJ _ _ _ _ _
 3 हो _ v VM _ _ _ _ _
 4 तो _ avy CC _ _ _ _ _
@@ -46,7 +46,7 @@ CONLL_DOC1 = u'''1 बात _ n NN _ _ _ _ _
 11 है _ v VM _ _ _ _ _
 12 । _ punc SYM _ _ _ _ _'''
 
-CONLL_DOC2 = u'''1 लेकिन _ avy CC _ _ _ _ _
+CONLL_DOC2 = '''1 लेकिन _ avy CC _ _ _ _ _
 2 अभिनेत्री _ n NN _ _ _ _ _
 3 के _ psp PSP _ _ _ _ _
 4 इस _ pn DEM _ _ _ _ _
@@ -64,15 +64,15 @@ TAGS = ['NN', 'JJ', 'VM', 'CC', 'PSP', 'RP', 'JJ', 'SYM', 'DEM', 'PRP', 'VAUX']
 
 CATEGORIES = ['n', 'adj', 'v', 'avy', 'n', 'psp', 'punc', 'pn']
 
-TOKENIZED_DOCS = u'''बात गलत हो तो गुस्सा सेलेब्रिटिज को भी आना लाजमी है ।
+TOKENIZED_DOCS = '''बात गलत हो तो गुस्सा सेलेब्रिटिज को भी आना लाजमी है ।
 लेकिन अभिनेत्री के इस कदम से वहां रंग में भंग पड़ गया ।
 '''
 
-CHARS = u'''अ इ आ क ग ज ट त द न प भ ब य म र ल व ह स ि ा ु ी े ै ो ् ड़ । ं'''.split(' ')
+CHARS = '''अ इ आ क ग ज ट त द न प भ ब य म र ल व ह स ि ा ु ी े ै ो ् ड़ । ं'''.split(' ')
 
-CHAR_NGRAMS = u'''^ अ  ^ अभ  ^ आ  ^ आन  ^ इ  ^ इस $  ^ क  ^ कद  ^ के $  ^ को $  ^ ग  ^ गय  ^ गल  ^ गु  ^ त  ^ तो $  ^ प  ^ पड़ $  ^ ब  ^ बा  ^ भ  ^ भं  ^ भी $  ^ म  ^ मे  ^ र  ^ रं  ^ ल  ^ ला  ^ ले  ^ व  ^ वह  ^ स  ^ से  ^ से $  ^ ह  ^ है $  ^ हो $  ^ । $  ं  ं $  ंग $  क  कि  ग $  ज  ज $  जम  ट  टि  त  त $  त्  द  दम $  न  न $  ना $  ने  ब  ब्  भ  भि  म  म $  मी $  य  या $  र  रि  री $  ल  ल  लत $  ले  स  स $  सा $  स्  ह  हा  ा  ा $  ां $  ाज  ात $  ि  िज $  िट  िन  िन $  ी $  ु  ुस  े  े $  ें $  ेक  ेत  ेब  ै $  ो $  ्  ्र  ्स  ड़ $'''.split('  ')
+CHAR_NGRAMS = '''^ अ  ^ अभ  ^ आ  ^ आन  ^ इ  ^ इस $  ^ क  ^ कद  ^ के $  ^ को $  ^ ग  ^ गय  ^ गल  ^ गु  ^ त  ^ तो $  ^ प  ^ पड़ $  ^ ब  ^ बा  ^ भ  ^ भं  ^ भी $  ^ म  ^ मे  ^ र  ^ रं  ^ ल  ^ ला  ^ ले  ^ व  ^ वह  ^ स  ^ से  ^ से $  ^ ह  ^ है $  ^ हो $  ^ । $  ं  ं $  ंग $  क  कि  ग $  ज  ज $  जम  ट  टि  त  त $  त्  द  दम $  न  न $  ना $  ने  ब  ब्  भ  भि  म  म $  मी $  य  या $  र  रि  री $  ल  ल  लत $  ले  स  स $  सा $  स्  ह  हा  ा  ा $  ां $  ाज  ात $  ि  िज $  िट  िन  िन $  ी $  ु  ुस  े  े $  ें $  ेक  ेत  ेब  ै $  ो $  ्  ्र  ्स  ड़ $'''.split('  ')
 
-COMMENTS = u'# Line with fake comments.'
+COMMENTS = '# Line with fake comments.'
 
 
 class LexiconBuilderTest(test_util.TensorFlowTestCase):
@@ -127,12 +127,12 @@ class LexiconBuilderTest(test_util.TensorFlowTestCase):
       logging.info('Reading document1')
       doc, last = self.ReadNextDocument(sess, doc_source)
       self.assertEqual(len(doc.token), 12)
-      self.assertEqual(u'लाजमी', doc.token[9].word)
+      self.assertEqual('लाजमी', doc.token[9].word)
       self.assertFalse(last)
       logging.info('Reading document2')
       doc, last = self.ReadNextDocument(sess, doc_source)
       self.assertEqual(len(doc.token), 13)
-      self.assertEqual(u'भंग', doc.token[9].word)
+      self.assertEqual('भंग', doc.token[9].word)
       self.assertFalse(last)
       logging.info('Hitting end of the dataset')
       doc, last = self.ReadNextDocument(sess, doc_source)
@@ -169,7 +169,7 @@ class LexiconBuilderTest(test_util.TensorFlowTestCase):
 
   def ValidateWordMap(self):
     word_map = self.LoadMap('word-map')
-    for word in filter(None, TOKENIZED_DOCS.replace('\n', ' ').split(' ')):
+    for word in [_f for _f in TOKENIZED_DOCS.replace('\n', ' ').split(' ') if _f]:
       self.assertIn(word.encode('utf-8'), word_map)
 
   def BuildLexicon(self):
@@ -183,7 +183,7 @@ class LexiconBuilderTest(test_util.TensorFlowTestCase):
     self.WriteContext('conll-sentence')
     logging.info('Writing conll file to: %s', self.corpus_file)
     with open(self.corpus_file, 'w') as f:
-      f.write((CONLL_DOC1 + u'\n\n' + CONLL_DOC2 + u'\n')
+      f.write((CONLL_DOC1 + '\n\n' + CONLL_DOC2 + '\n')
               .replace(' ', '\t').encode('utf-8'))
     self.ValidateDocuments()
     self.BuildLexicon()
@@ -195,8 +195,8 @@ class LexiconBuilderTest(test_util.TensorFlowTestCase):
   def testCoNLLFormatExtraNewlinesAndComments(self):
     self.WriteContext('conll-sentence')
     with open(self.corpus_file, 'w') as f:
-      f.write((u'\n\n\n' + CONLL_DOC1 + u'\n\n\n' + COMMENTS +
-               u'\n\n' + CONLL_DOC2).replace(' ', '\t').encode('utf-8'))
+      f.write(('\n\n\n' + CONLL_DOC1 + '\n\n\n' + COMMENTS +
+               '\n\n' + CONLL_DOC2).replace(' ', '\t').encode('utf-8'))
     self.ValidateDocuments()
     self.BuildLexicon()
     self.ValidateTagToCategoryMap()
@@ -211,7 +211,7 @@ class LexiconBuilderTest(test_util.TensorFlowTestCase):
   def testTokenizedTextFormatExtraNewlines(self):
     self.WriteContext('tokenized-text')
     with open(self.corpus_file, 'w') as f:
-      f.write((u'\n\n\n' + TOKENIZED_DOCS + u'\n\n\n').encode('utf-8'))
+      f.write(('\n\n\n' + TOKENIZED_DOCS + '\n\n\n').encode('utf-8'))
     self.ValidateDocuments()
     self.BuildLexicon()
 

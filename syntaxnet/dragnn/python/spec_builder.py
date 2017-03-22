@@ -205,7 +205,7 @@ class ComponentSpecBuilder(object):
         'Set a transition system before calling fill_from_resources().')
 
     context = lexicon.create_lexicon_context(resource_path)
-    for key, value in self.spec.transition_system.parameters.iteritems():
+    for key, value in self.spec.transition_system.parameters.items():
       context.parameter.add(name=key, value=value)
 
     context.parameter.add(
@@ -231,11 +231,11 @@ class ComponentSpecBuilder(object):
       feature_sizes, domain_sizes, _, num_actions = sess.run(
           gen_parser_ops.feature_size(task_context_str=str(context)))
       self.spec.num_actions = int(num_actions)
-      for i in xrange(len(feature_sizes)):
+      for i in range(len(feature_sizes)):
         self.spec.fixed_feature[i].size = int(feature_sizes[i])
         self.spec.fixed_feature[i].vocabulary_size = int(domain_sizes[i])
 
-    for i in xrange(len(self.spec.linked_feature)):
+    for i in range(len(self.spec.linked_feature)):
       self.spec.linked_feature[i].size = len(
           self.spec.linked_feature[i].fml.split(' '))
 

@@ -4,9 +4,9 @@ Adapted from tensorflow/tools/pip_package/build_pip_package.sh. This might have
 to change if Bazel changes how it modifies paths.
 """
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+
+
+
 
 import argparse
 import glob
