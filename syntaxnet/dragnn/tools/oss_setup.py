@@ -14,9 +14,9 @@
 # ==============================================================================
 """Packaging for SyntaxNet."""
 
-
-
-
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 import os
 
@@ -77,7 +77,7 @@ setuptools.setup(
         'Intended Audience :: Education',
         'Intended Audience :: Science/Research',
         'License :: OSI Approved :: Apache Software License',
-        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 2.7',
         'Topic :: Scientific/Engineering :: Mathematics',
     ],
     license='Apache 2.0',

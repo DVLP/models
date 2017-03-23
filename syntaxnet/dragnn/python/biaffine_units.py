@@ -1,8 +1,8 @@
 """Network units used in the Dozat and Manning (2017) biaffine parser."""
 
-
-
-
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 import tensorflow as tf
 
@@ -52,9 +52,9 @@ class BiaffineDigraphNetwork(network_units.NetworkUnitInterface):
     """
     super(BiaffineDigraphNetwork, self).__init__(component)
 
-    check.Eq(len(list(self._fixed_feature_dims.items())), 0,
+    check.Eq(len(self._fixed_feature_dims.items()), 0,
              'Expected no fixed features')
-    check.Eq(len(list(self._linked_feature_dims.items())), 2,
+    check.Eq(len(self._linked_feature_dims.items()), 2,
              'Expected two linked features')
 
     check.In('sources', self._linked_feature_dims,
@@ -161,9 +161,9 @@ class BiaffineLabelNetwork(network_units.NetworkUnitInterface):
     self._num_labels = int(parameters['num_labels'])
 
     check.Gt(self._num_labels, 0, 'Expected some labels')
-    check.Eq(len(list(self._fixed_feature_dims.items())), 0,
+    check.Eq(len(self._fixed_feature_dims.items()), 0,
              'Expected no fixed features')
-    check.Eq(len(list(self._linked_feature_dims.items())), 2,
+    check.Eq(len(self._linked_feature_dims.items()), 2,
              'Expected two linked features')
 
     check.In('sources', self._linked_feature_dims,

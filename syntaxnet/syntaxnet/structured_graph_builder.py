@@ -167,7 +167,7 @@ class StructuredGraphBuilder(graph_builder.GreedyParser):
       n.update(AddCrossEntropy(batch_size, n))
 
       if self._only_train:
-        trainable_params = {k: v for k, v in self.params.items()
+        trainable_params = {k: v for k, v in self.params.iteritems()
                             if k in self._only_train}
       else:
         trainable_params = self.params
@@ -175,13 +175,13 @@ class StructuredGraphBuilder(graph_builder.GreedyParser):
         tf.logging.info('trainable_param: %s', p)
 
       regularized_params = [
-          tf.nn.l2_loss(p) for k, p in trainable_params.items()
+          tf.nn.l2_loss(p) for k, p in trainable_params.iteritems()
           if k.startswith('weights') or k.startswith('bias')]
       l2_loss = 1e-4 * tf.add_n(regularized_params) if regularized_params else 0
 
       n['cost'] = tf.add(n['cross_entropy'], l2_loss, name='cost')
 
-      n['gradients'] = tf.gradients(n['cost'], list(trainable_params.values()))
+      n['gradients'] = tf.gradients(n['cost'], trainable_params.values())
 
       with tf.control_dependencies([n['alive_steps']]):
         update_accumulators = tf.group(
@@ -196,8 +196,8 @@ class StructuredGraphBuilder(graph_builder.GreedyParser):
                                              momentum,
                                              use_locking=self._use_locking)
       train_op = optimizer.minimize(n['cost'],
-                                    var_list=list(trainable_params.values()))
-      for param in list(trainable_params.values()):
+                                    var_list=trainable_params.values())
+      for param in trainable_params.values():
         slot = optimizer.get_slot(param, 'momentum')
         self.inits[slot.name] = state_ops.init_variable(slot,
                                                         tf.zeros_initializer())
@@ -206,11 +206,11 @@ class StructuredGraphBuilder(graph_builder.GreedyParser):
       def NumericalChecks():
         return tf.group(*[
             tf.check_numerics(param, message='Parameter is not finite.')
-            for param in list(trainable_params.values())
+            for param in trainable_params.values()
             if param.dtype.base_dtype in [tf.float32, tf.float64]])
       check_op = cf.cond(tf.equal(tf.mod(self.GetStep(), self._check_every), 0),
                          NumericalChecks, tf.no_op)
-      avg_update_op = tf.group(*list(self._averaging.values()))
+      avg_update_op = tf.group(*self._averaging.values())
       train_ops = [train_op]
       if self._check_parameters:
         train_ops.append(check_op)

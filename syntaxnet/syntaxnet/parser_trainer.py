@@ -169,7 +169,7 @@ def Train(sess, num_actions, feature_sizes, domain_sizes, embedding_dims):
     embedding_dims: embedding dimension to use for each feature group.
   """
   t = time.time()
-  hidden_layer_sizes = list(map(int, FLAGS.hidden_layer_sizes.split(',')))
+  hidden_layer_sizes = map(int, FLAGS.hidden_layer_sizes.split(','))
   logging.info('Building training network with parameters: feature_sizes: %s '
                'domain_sizes: %s', feature_sizes, domain_sizes)
 
@@ -224,7 +224,7 @@ def Train(sess, num_actions, feature_sizes, domain_sizes, embedding_dims):
   cost_sum = 0.0
   num_steps = 0
   best_eval_metric = 0.0
-  sess.run(list(parser.inits.values()))
+  sess.run(parser.inits.values())
 
   if FLAGS.pretrained_params is not None:
     logging.info('Loading pretrained params from %s', FLAGS.pretrained_params)

@@ -95,7 +95,7 @@ class ParsingReaderOpsTest(test_util.TensorFlowTestCase):
                           batch_size,
                           evaluation_max_steps=25,
                           corpus_name=None)
-    builder.training['inits'] = tf.group(*list(builder.inits.values()), name='inits')
+    builder.training['inits'] = tf.group(*builder.inits.values(), name='inits')
     return builder
 
   def Train(self, **kwargs):
@@ -107,8 +107,8 @@ class ParsingReaderOpsTest(test_util.TensorFlowTestCase):
           self.MakeGraph(
               max_steps=max_steps, beam_size=beam_size,
               batch_size=batch_size, **kwargs))
-      logging.info('params: %s', list(builder.params.keys()))
-      logging.info('variables: %s', list(builder.variables.keys()))
+      logging.info('params: %s', builder.params.keys())
+      logging.info('variables: %s', builder.variables.keys())
 
       t = builder.training
       sess.run(t['inits'])
@@ -139,7 +139,7 @@ class ParsingReaderOpsTest(test_util.TensorFlowTestCase):
         trainable_param_names = [
             k for k in builder.params if k in builder._only_train]
       else:
-        trainable_param_names = list(builder.params.keys())
+        trainable_param_names = builder.params.keys()
       if builder._use_averaging:
         for v in trainable_param_names:
           avg = builder.variables['%s_avg_var' % v].eval()

@@ -396,7 +396,7 @@ class GraphBuilderTest(test_util.TensorFlowTestCase):
           expected_num_actions = 4 * num_evaluated_components
         if (correct_val != total_val or correct_val != expected_num_actions or
             total_val != expected_num_actions):
-          for c in range(len(master_spec.component)):
+          for c in xrange(len(master_spec.component)):
             logging.error('component %s:\nname=%s\ntotal=%s\ncorrect=%s', c,
                           master_spec.component[c].name, eval_res_val[2 * c],
                           eval_res_val[2 * c + 1])

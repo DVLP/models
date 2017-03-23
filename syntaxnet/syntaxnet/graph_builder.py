@@ -409,7 +409,7 @@ class GreedyParser(object):
             tf.nn.softmax_cross_entropy_with_logits(
                 labels=dense_golden, logits=logits)), batch_size)
     regularized_params = [tf.nn.l2_loss(p)
-                          for k, p in list(self.params.items())
+                          for k, p in self.params.items()
                           if k.startswith('weights') or k.startswith('bias')]
     l2_loss = 1e-4 * tf.add_n(regularized_params) if regularized_params else 0
     return {'cost': tf.add(cross_entropy, l2_loss, name='cost')}
@@ -519,10 +519,10 @@ class GreedyParser(object):
       # Add the optimizer
       if self._only_train:
         trainable_params = [v
-                            for k, v in self.params.items()
+                            for k, v in self.params.iteritems()
                             if k in self._only_train]
       else:
-        trainable_params = list(self.params.values())
+        trainable_params = self.params.values()
       lr = self._AddLearningRate(learning_rate, decay_steps)
       optimizer = tf.train.MomentumOptimizer(lr,
                                              momentum,
@@ -540,7 +540,7 @@ class GreedyParser(object):
           if param.dtype.base_dtype in [tf.float32, tf.float64]
       ]
       check_op = tf.group(*numerical_checks)
-      avg_update_op = tf.group(*list(self._averaging.values()))
+      avg_update_op = tf.group(*self._averaging.values())
       train_ops = [train_op]
       if self._check_parameters:
         train_ops.append(check_op)
@@ -564,7 +564,7 @@ class GreedyParser(object):
       variables_to_save = self.params.copy()
       variables_to_save.update(self.variables)
       if slim_model:
-        for key in list(variables_to_save.keys()):
+        for key in variables_to_save.keys():
           if not key.endswith('avg_var'):
             del variables_to_save[key]
       self.saver = tf.train.Saver(variables_to_save)

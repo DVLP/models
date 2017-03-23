@@ -462,7 +462,7 @@ class LayerNorm(object):
     inputs_rank = inputs_shape.ndims
     if inputs_rank is None:
       raise ValueError('Inputs %s has undefined rank.' % inputs.name)
-    axis = list(range(1, inputs_rank))
+    axis = range(1, inputs_rank)
 
     beta = self._component.get_variable('beta_%s' % self._name)
     gamma = self._component.get_variable('gamma_%s' % self._name)
@@ -539,7 +539,7 @@ def get_attrs_with_defaults(parameters, defaults):
     RuntimeError: if a key in parameters is not present in defaults.
   """
   attrs = defaults
-  for key, value in parameters.items():
+  for key, value in parameters.iteritems():
     check.In(key, defaults, 'Unknown attribute: %s' % key)
     if isinstance(defaults[key], bool):
       attrs[key] = value.lower() == 'true'
@@ -595,7 +595,7 @@ def maybe_apply_dropout(inputs, keep_prob, per_sequence, stride=None):
 
 
 @registry.RegisteredClass
-class NetworkUnitInterface(object, metaclass=ABCMeta):
+class NetworkUnitInterface(object):
   """Base class to implement NN specifications.
 
   This class contains the required functionality to build a network inside of a
@@ -608,6 +608,7 @@ class NetworkUnitInterface(object, metaclass=ABCMeta):
     layers (list): List of Layer objects to track network layers that should
       be written to Tensors during training and inference.
   """
+  __metaclass__ = ABCMeta  # required for @abstractmethod
 
   def __init__(self, component, init_layers=None, init_context_layers=None):
     """Initializes parameters for embedding matrices.
@@ -671,8 +672,8 @@ class NetworkUnitInterface(object, metaclass=ABCMeta):
 
     # Compute the cumulative dimension of all inputs.  If any input has dynamic
     # dimension, then the result is -1.
-    input_dims = (list(self._fixed_feature_dims.values()) +
-                  list(self._linked_feature_dims.values()))
+    input_dims = (self._fixed_feature_dims.values() +
+                  self._linked_feature_dims.values())
     if any(x < 0 for x in input_dims):
       self._concatenated_input_dim = -1
     else:
@@ -684,13 +685,13 @@ class NetworkUnitInterface(object, metaclass=ABCMeta):
     if self._component.spec.attention_component:
       attention_source_component = self._component.master.lookup_component[
           self._component.spec.attention_component]
-      attention_hidden_layer_sizes = list(map(
+      attention_hidden_layer_sizes = map(
           int, attention_source_component.spec.network_unit.parameters[
-              'hidden_layer_sizes'].split(',')))
+              'hidden_layer_sizes'].split(','))
       attention_hidden_layer_size = attention_hidden_layer_sizes[-1]
 
-      hidden_layer_sizes = list(map(int, component.spec.network_unit.parameters[
-          'hidden_layer_sizes'].split(',')))
+      hidden_layer_sizes = map(int, component.spec.network_unit.parameters[
+          'hidden_layer_sizes'].split(','))
       # The attention function is built on the last layer of hidden embeddings.
       hidden_layer_size = hidden_layer_sizes[-1]
       self._params.append(
@@ -923,7 +924,7 @@ class FeedForwardNetwork(NetworkUnitInterface):
     # the base initializer may need to know the size of of the hidden layer for
     # recurrent connections.
     self._hidden_layer_sizes = (
-        list(map(int, self._attrs['hidden_layer_sizes'].split(',')))
+        map(int, self._attrs['hidden_layer_sizes'].split(','))
         if self._attrs['hidden_layer_sizes'] else [])
     super(FeedForwardNetwork, self).__init__(component)
 
@@ -1308,8 +1309,8 @@ class ConvNetwork(NetworkUnitInterface):
 
     self._weights = []
     self._biases = []
-    self._widths = list(map(int, self._attrs['widths'].split(',')))
-    self._depths = list(map(int, self._attrs['depths'].split(',')))
+    self._widths = map(int, self._attrs['widths'].split(','))
+    self._depths = map(int, self._attrs['depths'].split(','))
     self._output_dim = self._attrs['output_embedding_dim']
     if self._output_dim:
       self._depths.append(self._output_dim)
@@ -1445,8 +1446,8 @@ class PairwiseConvNetwork(NetworkUnitInterface):
     # Each input pixel will comprise the concatenation of two tokens, so the
     # input depth is double that for a single token.
     self._depths = [self._concatenated_input_dim * 2]
-    self._depths.extend(list(map(int, parameters['depths'].split(','))))
-    self._widths = list(map(int, parameters['widths'].split(',')))
+    self._depths.extend(map(int, parameters['depths'].split(',')))
+    self._widths = map(int, parameters['widths'].split(','))
     self._num_layers = len(self._widths)
     if len(self._depths) != self._num_layers + 1:
       raise RuntimeError('Unmatched depths/weights %s/%s' %
@@ -1513,7 +1514,7 @@ class PairwiseConvNetwork(NetworkUnitInterface):
     arg2 = tf.expand_dims(input_tensor, 2)
     arg2 = tf.tile(arg2, tf.stack([1, 1, num_steps, 1]))
     conv = tf.concat([arg1, arg2], 3)
-    for i in range(self._num_layers):
+    for i in xrange(self._num_layers):
       with tf.variable_scope('conv%d' % i, reuse=True) as scope:
         conv = tf.nn.conv2d(
             conv,
@@ -1586,7 +1587,7 @@ class SplitNetwork(NetworkUnitInterface):
              (self._concatenated_input_dim, self._num_slices))
     self._slice_dim = int(self._concatenated_input_dim / self._num_slices)
 
-    for slice_index in range(self._num_slices):
+    for slice_index in xrange(self._num_slices):
       self._layers.append(
           Layer(self, 'slice_%s' % slice_index, self._slice_dim))
 

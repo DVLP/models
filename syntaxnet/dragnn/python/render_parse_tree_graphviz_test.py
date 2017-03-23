@@ -1,8 +1,8 @@
 """Tests for ....dragnn.python.render_parse_tree_graphviz."""
 
-
-
-
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 from tensorflow.python.platform import googletest
 from dragnn.python import render_parse_tree_graphviz

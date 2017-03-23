@@ -3,9 +3,9 @@
 TODO(googleuser): Find a more reliable way to serve stuff from IPython
 notebooks (e.g. determining where the root notebook directory is).
 """
-
-
-
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 import gzip
 import os
@@ -112,7 +112,7 @@ def trace_html(trace,
       master_spec_json=_optional_master_spec_json(master_spec),
       elt_id=elt_id,
       div_html=div_html)
-  return str(as_str, 'utf-8') if convert_to_unicode else as_str
+  return unicode(as_str, 'utf-8') if convert_to_unicode else as_str
 
 
 def open_in_new_window(html, notebook_html_fcn=None, temp_file_basename=None):
@@ -133,7 +133,7 @@ def open_in_new_window(html, notebook_html_fcn=None, temp_file_basename=None):
   Returns:
     HTML notebook element, which will trigger the browser to open a new window.
   """
-  if isinstance(html, str):
+  if isinstance(html, unicode):
     html = html.encode('utf-8')
 
   if notebook_html_fcn is None:
@@ -191,7 +191,7 @@ class InteractiveVisualization(object):
     </script>
     """.format(
         script=script, div_html=div_html)
-    return str(html, 'utf-8')  # IPython expects unicode.
+    return unicode(html, 'utf-8')  # IPython expects unicode.
 
   def show_trace(self, trace, master_spec=None):
     """Returns a JS script HTML fragment, which will populate the container.
@@ -214,4 +214,4 @@ class InteractiveVisualization(object):
         json=parse_trace_json(trace),
         master_spec_json=_optional_master_spec_json(master_spec),
         elt_id=self.elt_id)
-    return str(html, 'utf-8')  # IPython expects unicode.
+    return unicode(html, 'utf-8')  # IPython expects unicode.

@@ -23,7 +23,7 @@ def calculate_component_accuracies(eval_res_values):
   return [
       1.0 * eval_res_values[2 * i + 1] / eval_res_values[2 * i]
       if eval_res_values[2 * i] > 0 else float('nan')
-      for i in range(len(eval_res_values) // 2)
+      for i in xrange(len(eval_res_values) // 2)
   ]
 
 
@@ -107,12 +107,12 @@ def run_training(sess, trainers, annotator, evaluator, pretrain_steps,
     checkpoint_stats = [0] * (len(train_steps) + 1)
   tf.logging.info('Determining the training schedule...')
   target_for_step = []
-  for target_idx in range(len(pretrain_steps)):
+  for target_idx in xrange(len(pretrain_steps)):
     target_for_step += [target_idx] * pretrain_steps[target_idx]
   while sum(train_steps) > 0:
     step = random.randint(0, sum(train_steps) - 1)
     cumulative_steps = 0
-    for target_idx in range(len(train_steps)):
+    for target_idx in xrange(len(train_steps)):
       cumulative_steps += train_steps[target_idx]
       if step < cumulative_steps:
         break
@@ -134,7 +134,7 @@ def run_training(sess, trainers, annotator, evaluator, pretrain_steps,
 
       annotated = annotate_dataset(sess, annotator, eval_corpus)
       summaries = evaluator(eval_gold, annotated)
-      for label, metric in summaries.items():
+      for label, metric in summaries.iteritems():
         _write_summary(summary_writer, label, metric, actual_step + step)
       eval_metric = summaries['eval_metric']
       if best_eval_metric < eval_metric:

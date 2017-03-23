@@ -42,7 +42,7 @@ class MasterState(object):
 
 
 @registry.RegisteredClass
-class ComponentBuilderBase(object, metaclass=ABCMeta):
+class ComponentBuilderBase(object):
   """Utility to build a single Component in a DRAGNN stack of models.
 
   This class handles converting a ComponentSpec proto into various TF
@@ -56,6 +56,8 @@ class ComponentBuilderBase(object, metaclass=ABCMeta):
   As part of the specification, ComponentBuilder will wrap an underlying
   NetworkUnit which generates the actual network layout.
   """
+
+  __metaclass__ = ABCMeta  # required for @abstractmethod
 
   def __init__(self, master, component_spec, attr_defaults=None):
     """Initializes the ComponentBuilder from specifications.
